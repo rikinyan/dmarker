@@ -114,11 +114,7 @@ def yes_or_no_ui(question_string: str):
     print("{} :[y/n]".format(question_string))
     user_input = os.read()
     
-    user_answer = False
-    for ans in true_answer_list:
-        user_answer = (ans == user_input)
-    
-    return user_answer
+    return (user_input in true_answer_list)
 
 
 if __name__ == "__main__":
