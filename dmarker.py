@@ -89,6 +89,7 @@ def delete_marker(marker_name):
             data_file.write("{}:{}\n".format(m.name, m.path_string))
         data_file.flush()
         os.fsync(data_file)
+        
 
 
 def get_markers() -> list[Marker]:
