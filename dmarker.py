@@ -4,7 +4,9 @@ import fileinput
 from collections import namedtuple
 from pathlib import Path
 import sys
+import dmarker_config as config
 
+# :workのenumを作ること。
 class Marker:
     def __init__(self, name, path_string):
         self.name = name
@@ -60,11 +62,8 @@ def save_markers(marker):
         if existing_makers.is_same_name_marker(marker):
             # ここでデータをセーブするロジックとUI表示が混じってしまっているので、                
             # いつかこのUIを分離するべき。
-            question_string = "Maker name already exist.\n \
-                                Do you update this marker's path?\n \
-                                current path: {}\n \
-                                path after update: {}"\
-                                .format(existing_marker.path_string, marker.path_string)
+            question_string =  config.save_marker_duplication_question\
+                                        .format(existing_marker.path_string, marker.path_string)
             if yes_or_no_ui(question_string):
                 duplicated_maker = existing_marker
             else:
@@ -74,7 +73,7 @@ def save_markers(marker):
     existing_makers.append(marker)
     saved_markers = existing_makers
         
-    with open("dmarker.txt", mode="w") as data_file:
+    with open(config.data_file_name, mode="w") as data_file:
         for marker in saved_markers:
             data_file.write("{}:{}\n".format(marker.name, marker.path_string))
         data_file.flush()
@@ -86,7 +85,7 @@ def delete_marker(marker_name):
         if m.name == marker_name:
             markers.remove(m)
     
-    with open("dmarker.txt", mode="w") as data_file:
+    with open(config.data_file_name, mode="w") as data_file:
         for m in markers:
             data_file.write("{}:{}\n".format(m.name, m.path_string))
         data_file.flush()
@@ -94,11 +93,11 @@ def delete_marker(marker_name):
 
 def get_markers() -> list[Marker]:
     print("markers")
-    if not os.path.exists("dmarker.txt"):
+    if not os.path.exists(config.data_file_name):
         return []
 
     markers = []
-    for line in fileinput.input(files="dmarker.txt"):
+    for line in fileinput.input(files=config.data_file_name):
         data = line.split(":")
         markers.append(Marker(data[0], data[1]))
     return markers
