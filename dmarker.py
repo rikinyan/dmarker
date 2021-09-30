@@ -11,18 +11,13 @@ import dmarker_config as config
 # そろそろファイル分けたほうがいい
 
 class CommandType(Enum):
-    ADD = "add"
-    DELETE = "delete"
-    LIST = "list"
+    ADD = AddCommand()
+    DELETE = DeleteCommand()
+    LIST = ListCommand()
 
-    @classmethod
-    def init_by_str(cls, str):
-        for member_var in list(cls):
-            if member_var.value == str:
-                return member_var
-
-    def work(self):
-        pass
+    # listコマンド利用時はmarker不要。
+    def work(self, marker):
+        self.value.work()
 
 # 何もしない。コマンドをポリモーフィズムで扱いたいがためだけに作った
 class CommandTypeInterface():
