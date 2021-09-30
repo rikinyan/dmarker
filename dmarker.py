@@ -3,10 +3,52 @@ import os
 import fileinput
 from collections import namedtuple
 from pathlib import Path
+from enum import Enum
 import sys
 import dmarker_config as config
 
-# :workのenumを作ること。
+# workのenumを作ること
+# そろそろファイル分けたほうがいい
+
+class CommandType(Enum):
+    ADD = "add"
+    DELETE = "delete"
+    LIST = "list"
+
+    @classmethod
+    def init_by_str(cls, str):
+        for member_var in list(cls):
+            if member_var.value == str:
+                return member_var
+
+    def work(self):
+        pass
+
+# 何もしない。コマンドをポリモーフィズムで扱いたいがためだけに作った
+class CommandTypeInterface():
+    command_str = None
+
+    def work(self, marker):
+        pass
+
+class AddCommand(CommandTypeInterface):
+    command_str = "add"
+
+    def work(self, marker):
+        save_markers(marker)
+        
+class DeleteCommand(CommandTypeInterface):
+    command_str = "delete"
+
+    def work(self, marker):
+        delete_marker(marker.name)
+
+class ListCommand(CommandTypeInterface):
+    command_str = "list"
+
+    def work(self, marker=None):
+        return get_markers()
+
 class Marker:
     def __init__(self, name, path_string):
         self.name = name
@@ -91,6 +133,11 @@ def delete_marker(marker_name):
         data_file.flush()
         os.fsync(data_file)
 
+def print_marker():
+    markers = get_markers()
+    for marker in markers:
+        print("{}: {}".format(marker.name, marker.path_string))
+
 def get_markers() -> list[Marker]:
     print("markers")
     if not os.path.exists(config.data_file_name):
@@ -120,6 +167,12 @@ def yes_or_no_ui(question_string: str):
 if __name__ == "__main__":
     parser = get_argment_parser()
     args = parser.parse_args()
+
+    # 順序
+    # 1. 必要に応じてmarkerを作成する
+    # 2. コマンドからCommandTypeを作成する
+    # 3. CommandType.work実行
+    
     work(args)
     
     
