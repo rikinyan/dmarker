@@ -50,7 +50,9 @@ def work(parsed_args):
         print(get_markers())
 
 def save_markers(marker):
-    print("save")
+    # マーカー重複時の削除のロジックを描くのが面倒だったので、
+    # ひとまずデータ全体を引っ張ってきて、そこから重複していたら削除or上書きをして、
+    # そのデータを用いてデータファイル全てを上書きし直している。
 
     existing_makers = get_markers()
     duplicated_maker = None
@@ -89,8 +91,6 @@ def delete_marker(marker_name):
             data_file.write("{}:{}\n".format(m.name, m.path_string))
         data_file.flush()
         os.fsync(data_file)
-        
-
 
 def get_markers() -> list[Marker]:
     print("markers")
