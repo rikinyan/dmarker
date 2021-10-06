@@ -1,7 +1,7 @@
 import os
 
 def yes_or_no_ui(question_string: str):
-    true_answer_list = ["yes", "YES", "y", "Y"]
+    true_answer_list = ["yes", "Yes" "YES", "y", "Y"]
 
     print("{} :[y/n]".format(question_string))
     user_input = os.read()

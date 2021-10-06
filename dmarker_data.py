@@ -8,7 +8,7 @@ class DataOperation:
     
     @classmethod
     def save_markers(self, marker: Marker):
-    # マーカー重複時の削除のロジックを描くのが面倒だったので、
+    # ロジックを描くのが面倒だったので、
     # ひとまずデータ全体を引っ張ってきて、そこから重複していたら削除or上書きをして、
     # そのデータを用いてデータファイル全てを上書きし直している。
         existing_makers = self.get_markers()        
